@@ -1,34 +1,31 @@
+using System;
+
 namespace ProGlassApp.Core
 {
     public static class GlassCalculator
     {
-        // DGU Price Logic (As per your formula)
-        // (Outer + Inner) / 0.85 + ASP Price + Profit %
-        public static decimal GetDguFinalPrice(decimal outer, decimal inner, decimal aspPrice, decimal profitMargin)
+        // 0.5 SQM Rule: 0.5 से कम होने पर 0.5 मानेंगे
+        public static decimal GetSqm(decimal w1, decimal h1, decimal w2, decimal h2)
         {
-            decimal ans1 = outer + inner;
-            decimal ans2 = ans1 / 0.85m;
-            decimal ans3 = ans2 + aspPrice;
-            decimal ans4 = ans3 + (ans3 * (profitMargin / 100));
-            return Math.Round(ans4); // Rounding to nearest whole number (e.g. 152)
+            decimal area = ((w1 * h1) + (w2 * h2)) / 1000000m; // mm to sqm conversion
+            return (area > 0 && area < 0.5m) ? 0.5m : area;
         }
 
-        // Lamination Price Logic
-        // (Outer + Inner) / 0.85 + PVB Price + Profit %
-        public static decimal GetLamiFinalPrice(decimal outer, decimal inner, decimal pvbPrice, decimal profitMargin)
+        // DGU Price Generator (As per your formula)
+        public static decimal CalculateDguPrice(decimal outer, decimal inner, decimal aspPrice, decimal profitMargin)
         {
             decimal ans2 = (outer + inner) / 0.85m;
-            decimal ans3 = ans2 + pvbPrice;
-            decimal ans4 = ans3 + (ans3 * (profitMargin / 100));
-            return Math.Round(ans4);
+            decimal ans3 = ans2 + aspPrice;
+            decimal final = ans3 + (ans3 * (profitMargin / 100));
+            return Math.Round(final); // Example: 151.86 -> 152
         }
 
-        // SGU Price Logic
-        // (Sheet / 0.85) + Cutting + Tempering + Profit %
-        public static decimal GetSguFinalPrice(decimal sheet, decimal cutting, decimal tempering, decimal profit)
+        // 4sqm Surcharge Logic (Apply on SqmPrice only)
+        public static decimal ApplySurcharge(decimal basePrice, decimal area, decimal percent)
         {
-            decimal ans2 = (sheet / 0.85m) + cutting + tempering;
-            return Math.Round(ans2 + (ans2 * profit / 100));
+            if (area > 4.0m)
+                return Math.Round(basePrice + (basePrice * (percent / 100)));
+            return basePrice;
         }
     }
 }
