@@ -1,31 +1,31 @@
-using System;
-
 namespace ProGlassApp.Core
 {
-    public static class GlassCalculator
+    public static partial class GlassCalculator
     {
-        // 0.5 SQM Rule & Surcharge logic
-        public static decimal GetFinalSqm(decimal w1, decimal h1, decimal w2, decimal h2)
+        // DGU Price Logic: (Outer+Inner)/0.85 + ASP + Profit
+        // Sheet Price is only the Outer Glass Price for Wastage Calc
+        public static decimal GetDguFinalPrice(decimal outerPrice, decimal innerPrice, decimal aspPrice, decimal profitMargin)
         {
-            decimal area = ((w1 * h1) + (w2 * h2)) / 1000000m;
-            return (area > 0 && area < 0.5m) ? 0.5m : area;
+            decimal ans1 = outerPrice + innerPrice;
+            decimal ans2 = ans1 / 0.85m; // 0.85 margin
+            decimal ans3 = ans2 + aspPrice; // ASP from dropdown
+            decimal ans4 = ans3 + (ans3 * (profitMargin / 100));
+            return Math.Round(ans4); // Rounding to 152 logic
         }
 
-        public static decimal ApplySurcharge(decimal price, decimal area, decimal pct) =>
-            (area > 4.0m) ? Math.Round(price + (price * pct / 100)) : price;
+        // Polish Formula: SGU (x2) vs Lami/DGU (x4)
+        public static decimal GetPolishQty(decimal w, decimal h, bool isLaminationOrDgu)
+        {
+            decimal baseQty = (w * h) / 1000;
+            return isLaminationOrDgu ? baseQty * 4 : baseQty * 2;
+        }
 
-        // Pricing Engines
-        public static decimal GetDguPrice(decimal outr, decimal innr, decimal asp, decimal prft) =>
-            Math.Round(((outr + innr) / 0.85m + asp) * (1 + prft / 100));
-
-        public static decimal GetSguPrice(decimal sheet, decimal cut, decimal temp, decimal prft) =>
-            Math.Round(((sheet / 0.85m) + cut + temp) * (1 + prft / 100));
-
-        public static decimal GetLamiPrice(decimal outr, decimal innr, decimal pvb, decimal prft) =>
-            Math.Round(((outr + innr) / 0.85m + pvb) * (1 + prft / 100));
-
-        // Polish Formula: SGU x2, DGU/Lami x4
-        public static decimal GetPolish(decimal w, decimal h, string type) =>
-            ((w * h) / 1000) * (type == "SGU" ? 2 : 4);
+        // Surcharge Logic: Applied ONLY to Sqm Price
+        public static decimal ApplySurchargeOnPrice(decimal baseSqmPrice, decimal area, decimal surchargePct)
+        {
+            if (area > 4.0m)
+                return Math.Round(baseSqmPrice + (baseSqmPrice * (surchargePct / 100)));
+            return baseSqmPrice;
+        }
     }
 }

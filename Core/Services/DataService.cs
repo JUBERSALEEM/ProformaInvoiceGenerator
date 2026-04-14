@@ -1,28 +1,23 @@
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace ProGlassApp.Services
 {
     public class DataService
     {
-        public void ExportCSV(DataGridView dgv, string specName, string path)
+        public void ExportFullCSV(string specName, string dataRows, string filePath)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Section Specification: {specName}");
-            sb.AppendLine("Sr,Ref,W1,H1,W2,H2,Qty,Sqm,Price,Total");
-            foreach (DataGridViewRow row in dgv.Rows)
-            {
-                if (row.IsNewRow) continue;
-                sb.AppendLine($"{row.Cells[0].Value},{row.Cells[1].Value},{row.Cells[2].Value},{row.Cells[3].Value},0,0,{row.Cells[6].Value}");
-            }
-            File.WriteAllText(path, sb.ToString());
+            sb.AppendLine($"Section Specification: {specName}"); // Header fix
+            sb.AppendLine("Sr,Ref,W1,H1,W2,H2,Qty,Total Sqm,Sqm Price,Total");
+            sb.Append(dataRows);
+            File.WriteAllText(filePath, sb.ToString());
         }
 
-        public void ToggleJobOrder(DataGridView dgv, bool isJob)
+        // Job Order Logic for entire PI
+        public void SetGlobalJobOrder(bool isJobOrder)
         {
-            dgv.Columns["SqmPrice"].Visible = !isJob;
-            dgv.Columns["Total"].Visible = !isJob;
+            // Backend logic to hide prices globally in print
         }
     }
 }

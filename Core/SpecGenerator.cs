@@ -2,11 +2,16 @@ namespace ProGlassApp.Core
 {
 	public static class SpecGenerator
 	{
-		public static string Generate(string type, string t1, string c1, string asp = "", string t2 = "", string c2 = "", string extra = "")
+		public static string GenerateDguSpec(string outr, string asp, string innr, string extra)
 		{
-			if (type == "DGU")
-				return $"{t1} {c1} FT + {asp} ASP + {t2} {c2} FT Glass {extra}".Trim();
-			return $"{t1} {c1} FT Glass {extra}".Trim();
+			// Example: 6mm HD Grey + 12mm ASP with U-Insert + 6mm Clear + Argon Gas
+			return $"{outr} FT Glass + {asp} ASP + {innr} FT Glass {extra}".Trim();
+		}
+
+		public static string GenerateLamiSpec(string outr, string pvb, string innr, string polishType)
+		{
+			// Example: 8mm Clear FT + 1.52 PVB + 6mm Clear FT with All Side Polish
+			return $"{outr} FT Glass + {pvb} + {innr} FT Glass with {polishType}".Trim();
 		}
 	}
 }
