@@ -2,16 +2,24 @@ namespace ProGlassApp.Core
 {
 	public static class SpecGenerator
 	{
-		public static string GenerateDguSpec(string outr, string asp, string innr, string extra)
+		// DGU ऑटो-जेनरेटर (with U-Insert, Argon, Overlap logic)
+		public static string GenerateDgu(string outr, string color, string asp, string innr, string extra)
 		{
-			// Example: 6mm HD Grey + 12mm ASP with U-Insert + 6mm Clear + Argon Gas
-			return $"{outr} FT Glass + {asp} ASP + {innr} FT Glass {extra}".Trim();
+			// Example: 6mm HD Grey FT Glass + 12mm ASP with U-Insert + 6mm Clear FT Glass with Argon Gas
+			return $"{outr} {color} FT Glass + {asp} ASP {extra} + {innr} FT Glass".Trim();
 		}
 
-		public static string GenerateLamiSpec(string outr, string pvb, string innr, string polishType)
+		// SGU ऑटो-जेनरेटर
+		public static string GenerateSgu(string thick, string color, string type, string processing)
 		{
-			// Example: 8mm Clear FT + 1.52 PVB + 6mm Clear FT with All Side Polish
-			return $"{outr} FT Glass + {pvb} + {innr} FT Glass with {polishType}".Trim();
+			// Example: 6mm Clear FT Glass with All Side Polish
+			return $"{thick} {color} {type} Glass with {processing}".Trim();
+		}
+
+		// Lamination ऑटो-जेनरेटर
+		public static string GenerateLami(string outr, string pvb, string innr, string extra)
+		{
+			return $"{outr} FT Glass + {pvb} PVB + {innr} FT Glass {extra}".Trim();
 		}
 	}
 }
