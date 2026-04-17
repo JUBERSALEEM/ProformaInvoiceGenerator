@@ -22,7 +22,7 @@ A powerful C# Windows Desktop Application designed to automate **Proforma Invoic
 The system uses backend formulas to generate precise **Sqm Price** with automatic rounding:
 - **SGU (Single Glass):** `((Sheet/0.85) + Cutting + Tempering) + Profit %`
 - **DGU (Double Glass):** `((Outer + Inner)/0.85 + ASP Price) + Profit %`
-- **Lamination:** `((Outer + Inner)/0.85 + PVB Price) + Profit %`
+- **Lamination:** `((Outer + Inner)/0.85 + PVB Price) + Cutting + Tempering + Profit %`
 - **Rounding Logic:** e.g., `151.86 -> 152 AED`.
 
 ### 2. Auto-Specification Generator
